@@ -1,5 +1,7 @@
-const Page = () => {
-    return
-}
+import Logout from "csc-start/components/Logout";
 
-export default Page
+const Page = () => {
+  return <Logout />;
+};
+
+export default Page;

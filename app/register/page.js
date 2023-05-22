@@ -1,5 +1,10 @@
+"use client";
+
+import Register from "csc-start/components/Register";
+
 const Page = () => {
-    return
+    return <Register />
 }
 
-export default Page
+
+export default Page;

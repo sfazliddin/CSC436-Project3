@@ -1,5 +1,8 @@
+import Profile from "csc-start/components/Profile";
+
 const Page = () => {
-    return <div>profile</div>
+    return <Profile />;
+
 }
 
-export default Page
+export default Page;

@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .button {
+    @apply text-3xl lg:h1 pb-3 mb-2 text-center line-clamp-1 active:relative active:top-[4px] active:shadow-[2px_2px_0px_#000000] active:shadow-none bg-brutal-yellow border-black box-border shadow-[4px_4px_0px_#000000] border-4 w-full px-[32px];
+  }
+
+  .button:disabled {
+    @apply pointer-events-none bg-gray-300 opacity-40;
+  }
+
+  .button.small {
+    @apply text-lg pb-1 w-auto;
+  }
+
+  .h1,
+  .h2 {
+    @apply leading-none;
+  }
+
+  .h1 {
+    @apply text-5xl;
+  }
+
+  .h2 {
+    @apply text-4xl;
+  }
+
+  .h3 {
+    @apply text-xl;
+  }
+
+  .barge {
+    @apply w-[390px] lg:w-[500px] mx-auto px-[46px];
+  }
+}
