@@ -7,9 +7,8 @@ import { useState, useEffect } from "react";
 
 const Profile = () => {
   const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [linkType, setLinkType] = useState("link");
-  const [currentLinks, setCurrentLinks] = useState([]);
+  const [items, setItems] = useState("");
+  const [currentList, setCurrentList] = useState([]);
 
   // the user hook, will, provide us with the following, and it is completely abstracted away
   //  - user, and update whenever it's changed (undefined if loading, set if loaded)
@@ -18,29 +17,18 @@ const Profile = () => {
   // we removed the useUser in the userMustBeLogged component, and now are supplying the user
   useUserMustBeLogged(user, "in", "/login");
 
-  useEffect(() => {
-    if (user) {
-      let tempCurrentLinks = user.socialLinks;
-      if (linkType === "link") {
-        tempCurrentLinks = user.linkLinks;
-      }
-
-      setCurrentLinks(tempCurrentLinks);
-    }
-  }, [user, linkType]);
-
-  const addLink = async (e) => {
+  const addList = async (e) => {
     e.preventDefault();
 
-    const order = currentLinks.length + 1;
-    const addedLink = await addNewLink(user.id, url, title, order, linkType);
+    const priority = currentList.length + 1;
+    const addedLink = await addNewLink(user.id, items, title, priority);
     if (addedLink.success == false) {
       //handle error
       return;
     }
-    setUrl("");
+    setItems("");
     setTitle("");
-    //@todo update this to either fake get the links (by taking the latest DB load + adding in the latest pushed link)
+    //@todo update this to either fake get the List (by taking the latest DB load + adding in the latest pushed list)
     //  or make a new request....
     refreshUser();
     //handle success
@@ -58,47 +46,26 @@ const Profile = () => {
       {!error && loading && <p>Loading...</p>}
       {!error && !loading && (
         <div>
-          <div className="flex justify-between my-5">
-            <button
-              disabled={linkType === "social"}
-              onClick={() => setLinkType("social")}
-              className="button small"
-            >
-              Social
-            </button>
-            <button
-              disabled={linkType === "link"}
-              onClick={() => setLinkType("link")}
-              className="button small"
-            >
-              Links
-            </button>
-          </div>
-
-          <p className="h2 my-5">
-            Currently Viewing <span className="capitalize">{linkType}</span>{" "}
-            Links
-          </p>
           <table>
             <thead>
               <tr>
-                <th>URL</th>
+                <th>Items</th>
                 <th>Title</th>
               </tr>
             </thead>
             <tbody>
-              {currentLinks.map((link) => {
+              {currentList.map((list) => {
                 return (
-                  <tr key={link.id}>
-                    <td>{link.url}</td>
-                    <td>{link.title}</td>
+                  <tr key={list.id}>
+                    <td>{list.items}</td>
+                    <td>{list.title}</td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          <form onSubmit={addLink}>
-            <p className="h2">Add New Link</p>
+          <form onSubmit={addList}>
+            <p className="h2">Add New list</p>
             <p className="my-5">
               <label htmlFor="title" className="inline-block w-[75px]">
                 Title:
@@ -113,16 +80,16 @@ const Profile = () => {
               />
             </p>
             <p className="my-5">
-              <label htmlFor="url" className="inline-block w-[75px]">
-                URL:
+              <label htmlFor="items" className="inline-block w-[75px]">
+                items:
               </label>
               <input
                 className="border border-2 border-black px-2"
-                id="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
+                id="items"
+                value={items}
+                onChange={(e) => setItems(e.target.value)}
                 required
-                type="url"
+                type="items"
               />
             </p>
             <p className="text-center">

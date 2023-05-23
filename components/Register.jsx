@@ -15,7 +15,6 @@ const Register = () => {
     switch (action.type) {
       case "email":
       case "name":
-      case "slug":
       case "password":
         return { ...state, [action.type]: action.value };
       case "loading":
@@ -30,20 +29,19 @@ const Register = () => {
   const initialState = {
     email: "",
     name: "",
-    slug: "",
     password: "",
     response: "",
     loading: false,
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { email, name, slug, password, response, loading } = state;
+  const { email, name, password, response, loading } = state;
 
   const register = async (e) => {
     dispatch({ type: "loading", loading: true });
     e.preventDefault();
 
-    const response = await registerUser(email, password, name, slug);
+    const response = await registerUser(email, password, name);
     dispatch({ type: "response", response });
     dispatch({ type: "loading", loading: false });
     if (!!response?.success) {

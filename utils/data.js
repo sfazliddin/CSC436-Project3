@@ -1,24 +1,24 @@
 import supabase from "./supabase";
 
-const getUserBySlug = async (slug) => {
-  const {data, error} = await supabase
+const getUserById = async (id) => {
+  const { data, error } = await supabase
     .from("profile")
     .select("user_id")
-    .eq("slug", slug)
+    .eq("email", id)
     .limit(1)
     .single();
-    if(error){
-      return {
-        success: false,
-        error
-      }
-    }
-
+  if (error) {
     return {
-      success: true,
-      data
+      success: false,
+      error
     }
-    
+  }
+
+  return {
+    success: true,
+    data
+  }
+
 }
 
 
@@ -26,21 +26,21 @@ const getUserBySlug = async (slug) => {
 const getLatestUsers = async (num = 5) => {
   const { data, error } = await supabase
     .from("profile")
-    .select("name, slug")
-    .order("created_at", {ascending: false})
+    .select("name, email")
+    .order("created_at", { ascending: false })
     .limit(num);
 
-    if(error){
-      return {
-        success: false,
-        error
-      }
-    }
-
+  if (error) {
     return {
-      success: true,
-      data
+      success: false,
+      error
     }
+  }
+
+  return {
+    success: true,
+    data
+  }
 
 
 }
@@ -138,10 +138,10 @@ const getCurrentUser = async () => {
 // };
 
 const getLinks = async (userId) => {
-// remove references to linkRequestData, as it is overzealously caching
-// if (linkRequestData.data) {
-//   return linkRequestData.data;
-// }
+  // remove references to linkRequestData, as it is overzealously caching
+  // if (linkRequestData.data) {
+  //   return linkRequestData.data;
+  // }
 
   const { data, error } = await supabase
     .from("links")
@@ -205,14 +205,13 @@ const getLinksLinks = (userId) => {
  * @param {*} email
  * @param {*} password
  * @param {*} name
- * @param {*} slug
  * @returns plain old javascript object with success, message and optionally, the rest of the addMetaResponse.data object
  */
-const registerUser = async (email, password, name, slug) => {
+const registerUser = async (email, password, name) => {
   const { data: registerData, error: registerError } = await supabase
     .from("profile")
     .select("*")
-    .eq("slug", slug);
+    .eq("email", email);
   if (registerError) {
     return {
       success: false,
@@ -241,7 +240,7 @@ const registerUser = async (email, password, name, slug) => {
   if (authResponse.data.user) {
     const addMetaResponse = await supabase
       .from("profile")
-      .insert([{ user_id: authResponse.data.user.id, name, slug }]);
+      .insert([{ user_id: authResponse.data.user.id, name }]);
 
     if (addMetaResponse.error) {
       return {
@@ -324,5 +323,5 @@ export {
   addNewLink,
   logout,
   getLatestUsers,
-  getUserBySlug
+  getUserById
 };
